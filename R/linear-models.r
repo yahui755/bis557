@@ -16,6 +16,6 @@ linear_model <- function(formula, data) {
   res = data[,form[1]]
   fit_lm_model =list()
   fit_lm_model$coefficients =qr.coef(qr(mat),res)
-  class(fit_lm)="lm"
-  return(fit_lm)
+  class(fit_lm_model)="lm"
+  return(fit_lm_model)
 }
