@@ -1,3 +1,4 @@
+setwd("~/Desktop/bis557/data")
 library(testthat)
 
 context("Test the output of homework 2.")
@@ -10,3 +11,4 @@ test_that("Ridge regression works.", {
   expect_equivalent(fit_ridge$coef, 
     c(0.30854117, -0.27991787,  0.04860966, 0.03427351), tolerance = 1e-5)
 })
+

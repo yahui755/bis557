@@ -21,11 +21,11 @@ fit
 ```
 ## Looks at effect on the out-of-sample mean square error as $\lambda$ varies
 ```{r}
-data("ridge_train")
-data("ridge_test")
+data(ridge_train)
+data(ridge_test)
 
 #calculation of  MSE
-calt_mse<-function(formula,lambda,train_data,test_data){
+cal_mse<-function(formula,lambda,train_data,test_data){
   coeff<-ridge_reg(formula,lambda,train_data)$coefficients
   x_test<-as.matrix(model.matrix(formula, test_data))
   y_test<-test_data[,as.character(formula)[2]]
@@ -36,7 +36,7 @@ calt_mse<-function(formula,lambda,train_data,test_data){
 
 #use lambda from 0 to 100
 lambda<-seq(0,100,0.5)
-mse_test<-sapply(lambda, function(lambda)calt_mse(y~.,lambda,ridge_train,ridge_test))
+mse_test<-sapply(lambda, function(lambda)cal_mse(y~.,lambda,ridge_train,ridge_test))
 min(mse_test)
 
 ```
