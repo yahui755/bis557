@@ -1,14 +1,12 @@
 
 #' Fit a ridge regression model
 #'
-#' @description This function passes parameters to the ridge_reg function.
+#' @description This function passes parameters to the ridge regression function.
 #' @param formula a formula
 #' @param data a data.frame
-#' @param lambda a numeric parameter
-#' @return An ridge_reg object
-
-#' @examples
-#' fit <- ridge_reg(Sepal.Length ~., 1.5,iris)
+#' @param lambda a tuning parameter
+#' @return An ridge object
+#' @importFrom stats model.matrix
 #' @export
 
 

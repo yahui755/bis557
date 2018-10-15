@@ -1,4 +1,4 @@
-setwd("~/Desktop/bis557/data")
+
 library(testthat)
 
 context("Test the output of homework 2.")

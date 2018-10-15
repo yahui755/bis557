@@ -17,7 +17,7 @@ output:
 ```{r}
 library(bis557)
 fit<-ridge_reg(Sepal.Length ~ .,1.2, iris)
-fit
+
 ```
 ## Looks at effect on the out-of-sample mean square error as $\lambda$ varies
 ```{r}
