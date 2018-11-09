@@ -101,7 +101,7 @@ It's a sum of $l_2\ norm$ and $l_1\ norm$, by 3 and 4, it's convex
 ##5.
 According to textbook page 189:
 ```{r}
-install.packages("glmnet")
+install.packages("glmnet",repos = "http://cran.us.r-project.org")
 library(glmnet)
 # Check current KKT conditions for regression vector.
 #Arguments:
