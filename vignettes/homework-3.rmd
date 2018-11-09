@@ -102,7 +102,7 @@ It's a sum of $l_2\ norm$ and $l_1\ norm$, by 3 and 4, it's convex
 According to textbook page 189:
 ```{r}
 if(!require(somepackage)){
-    install.packages("Matrix")
+    install.packages("Matrix",repos = "http://cran.us.r-project.org")
     library(Matrix)
 }
 library(glmnet)
