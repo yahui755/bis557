@@ -101,8 +101,12 @@ It's a sum of $l_2\ norm$ and $l_1\ norm$, by 3 and 4, it's convex
 ##5.
 According to textbook page 189:
 ```{r}
-library(devtools)
+if(!require(somepackage)){
+    install.packages("Matrix")
+    library(Matrix)
+}
 library(glmnet)
+
 # Check current KKT conditions for regression vector.
 #Arguments:
 # X: A numeric data matrix.
