@@ -100,7 +100,7 @@ It's a sum of $l_2\ norm$ and $l_1\ norm$, by 3 and 4, it's convex
 
 ##5.
 ```{r}
-install.packages("glmnet")
+#install.packages("glmnet")
 library(glmnet)
 # KKT check function
 check_kkt <- function(y, X, b, lambda) {
