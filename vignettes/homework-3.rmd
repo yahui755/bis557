@@ -1,7 +1,9 @@
 ---
 title: "Homework 3"
 output: pdf_document
-Imports: <glmnet>
+Imports: glmnet,Matrix
+
+
 ---
 
 This homework is due by the end of the day on November 5th 2018. Solutions should appear as a vignette in your package called "homework-3". If you do not want to write your solution for questions 2 - 4 in \LaTeX, you may provide a solution using paper and pencil and include an image in your write-up. 
@@ -105,7 +107,7 @@ According to textbook page 189:
 
 #library(Matrix)
 
-library(glmnet)
+#library(glmnet)
 
 # Check current KKT conditions for regression vector.
 #Arguments:
