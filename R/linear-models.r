@@ -6,7 +6,7 @@
 #' @param data a data.frame
 #' @return An lm object
 #' @importFrom stats lm
-#' @examples
+
 #' @export
 linear_model <- function(formula, data) {
   form = all.vars(formula)
