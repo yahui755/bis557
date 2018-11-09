@@ -99,27 +99,49 @@ $$\frac{1}{2n}||y-Xb||^2_2+\lambda[(1-\alpha)\frac{1}{2}||b||^2_2+\alpha||b||_1]
 It's a sum of $l_2\ norm$ and $l_1\ norm$, by 3 and 4, it's convex
 
 ##5.
+According to textbook page 189:
 ```{r}
-#install.packages("glmnet")
 library(glmnet)
-# KKT check function
-check_kkt <- function(y, X, b, lambda) {
-  resids <- y - X %*% b 
-  s <- apply(X, 2, function(xj) crossprod(xj, resids)) / lambda / nrow(X)
-  (b == 0) & (abs(s) >= 1)
+# Check current KKT conditions for regression vector.
+#Arguments:
+# X: A numeric data matrix.
+# y: Response vector.
+# b: Current value of the regression vector.
+# lambda: The penalty term.
+#Return: 
+#A logical vector indicating where the KKT conditions have been violated by the variables that are currently zero.
+check_kkt <-
+function(X, y, b, lambda)
+{
+resids <- y - X %*% b
+s <- apply(X, 2, function(xj) crossprod(xj, resids)) /
+lambda / nrow(X)
+# Return a vector indicating where the KKT conditions have been violated by the variables that are currently zero.
+(b == 0) & (abs(s) >= 1)
 }
-# use iris as dataset
-x <- scale(model.matrix(Sepal.Length ~. -1, iris))
-y <- iris[,1]
-# implement lasso (set alpha to 0)
-lasso_reg_with_screening <- function(x, y){
-  m1 <- cv.glmnet(x,y,alpha=1)
-  lambda <- m1$lambda.1se
-  b <- m1$glmnet.fit$beta[, m1$lambda == lambda]
-  print(b)
-  check_kkt(y, x, b, lambda)
-}
-lasso_reg_with_screening(x, y)
 ```
-The KTT check of all coefficients are FALSE, indicating there is no KTT violation in above case. 
+According to the textbook, we can generate a random dataset
+```{r}
+set.seed(365)
+n <- 1000L
+p <- 5000L
+X <- matrix(rnorm(n * p), ncol = p)
+beta <- c(seq(1, 0.1, length.out=(10L)), rep(0, p - 10L))
+y <- X %*% beta + rnorm(n = n, sd = 0.15)
+```
+Use glmnet to implement lasso regression
+```{r}
 
+#Check which variables violate KKT condition
+#x:A numeric data matrix.
+#y: Response vector.
+#Return: logical vector indicating where the KKT conditions have been violated
+lasso_reg_with_screening <- function(x, y){
+  fit <- cv.glmnet(X,y,alpha=1)
+  lambda.1se <- fit$lambda.1se
+  b <- fit$glmnet.fit$beta[, which(fit$lambda == fit$lambda.1se)]
+  print(b)
+  check_kkt(X, y, b, lambda.1se)
+}
+#We can observe that almost all coefficients get a false result for KKT violation. 
+```
