@@ -15,6 +15,9 @@ This homework is due by the end of the day on November 5th 2018. Solutions shoul
 4. CASL page 200, question 5
 5. CASL page 200, question 6
 
+```{r, echo=FALSE}
+knitr::opts_chunk$set(error = TRUE)
+```
 ---
 <!--
 %\VignetteEngine{knitr::rmarkdown}
@@ -145,7 +148,7 @@ lasso_reg_with_screening <- function(x, y){
   b <- m1$glmnet.fit$beta[, m1$lambda == lambda]
   check_kkt(y, x, b, lambda)
 }
-#lasso_reg_with_screening(x,y)
+lasso_reg_with_screening(x,y)
 
 ```
 We can observe that all coefficients get a false result for KKT violation,which indicates that no KKT violation
