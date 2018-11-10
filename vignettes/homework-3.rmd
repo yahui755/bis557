@@ -121,7 +121,7 @@ It's a sum of $l_2\ norm$ and $l_1\ norm$, from the previous two exercises,it's 
 ##5.
 According to textbook page 189:
 ```{r}
-library(glmnet)
+#library(glmnet)
 # KKT check function
 #Return: 
 #A logical vector indicating where the KKT conditions have been violated by the variables that are currently zero.
@@ -148,7 +148,7 @@ lasso_reg_with_screening <- function(x, y){
   b <- m1$glmnet.fit$beta[, m1$lambda == lambda]
   check_kkt(y, x, b, lambda)
 }
-lasso_reg_with_screening(x,y)
+#lasso_reg_with_screening(x,y)
 
 ```
 We can observe that all coefficients get a false result for KKT violation,which indicates that no KKT violation
