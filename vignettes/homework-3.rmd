@@ -23,28 +23,34 @@ This homework is due by the end of the day on November 5th 2018. Solutions shoul
 ##1.
 ```{r}
 set.seed(6909)
-x <- rnorm(1000, 0, 1)
-x.new <- sort(rnorm(50, 0, 1))
+#write out the Epanechnikov kernel function
 kernel_epan <- function(x) {
 ran <- as.numeric(abs(x) <= 1)
 val <- (3/4) * ( 1 - x^2 ) * ran
 return(val)
 }
-kernel_epan(x)
+
+#write out the Epanechnikov density function
 i = 1
 h = 1
-kern_density <- function(x, h, x.new){
+kern_density <- function(x, h, x_new){
   dst_est <- numeric()
-  for (i in 1:length(x.new)){
-    dst_est[i] <- mean(kernel_epan((x.new[i]-x)/h))/h
+  for (i in 1:length(x_new)){
+    dst_est[i] <- mean(kernel_epan((x_new[i]-x)/h))/h
   }
   dst_est
 }
-h = c(0.1, 0.5, 1, 2, 3)
+
+#visualize different bandwidths
+x <- rnorm(1000, 0, 1)
+x_new <- sort(rnorm(50, 0, 1))
+h = c(0.01, 0.1, 0.5, 1, 2, 3)
 for (i in h){
-  plot(x.new, kern_density(x,i,x.new), ylab = "Density", main = "Kernal density estimation", type = "l")  
+  plot(x_new, kern_density(x,i,x_new), ylab = "Density", main = "Kernal density estimation", type = "l")  
 }
 ```
+From the plots above, as bandwidth increases, the estimations become smoother and closer to normal distribtion. 
+And when bandwidth increases to a certain value, the estimation remains similar no matter how bandwidth increases.
 
 
 ##2.
@@ -67,6 +73,8 @@ $$
 Therefore, $h = f + g$ is convex.
 
 ##3.
+
+we want to prove that $f(x) = |x|$ is convex.
 For $t \in [0, 1]$
 $$
 \begin{aligned}
@@ -77,8 +85,13 @@ f(tx+(1-t)y)&=|tx+(1-t)y|\\
 &=tf(x)+(1-t)f(y)
 \end{aligned}
 $$
-Thus, $f(x)$ is convex.  
-By Problem 3 (200.3), $l_1\ norm= \sum_{i = 1}|v_i|$ is convex
+Thus, $f(x)=|x|$ is convex.  
+
+the other question, $\mathcal{L}_1$ norm:
+\[
+|x|_1 = \sum_{i = 1}^{n}|x_i|
+\]
+By the last question, it's also convex.
 
 ##4.
 
@@ -97,53 +110,41 @@ f(tx+(1-t)y) &\leq tf(x)+(1-t)f(y)
 $$
 
 Therefore, $f(x) = x^2$ is convex. 
-Objective function of elastic net
+Objective function of elastic net is
 $$\frac{1}{2n}||y-Xb||^2_2+\lambda[(1-\alpha)\frac{1}{2}||b||^2_2+\alpha||b||_1]$$
-It's a sum of $l_2\ norm$ and $l_1\ norm$, by 3 and 4, it's convex
+It's a sum of $l_2\ norm$ and $l_1\ norm$, from the previous two exercises,it's convex
 
 ##5.
 According to textbook page 189:
 ```{r}
-# Check current KKT conditions for regression vector.
-#Arguments:
-# X: A numeric data matrix.
-# y: Response vector.
-# b: Current value of the regression vector.
-# lambda: The penalty term.
+library(glmnet)
+# KKT check function
 #Return: 
 #A logical vector indicating where the KKT conditions have been violated by the variables that are currently zero.
-check_kkt <-
-function(X, y, b, lambda)
-{
-resids <- y - X %*% b
-s <- apply(X, 2, function(xj) crossprod(xj, resids)) /
-lambda / nrow(X)
-# Return a vector indicating where the KKT conditions have been violated by the variables that are currently zero.
-(b == 0) & (abs(s) >= 1)
+check_kkt <- function(y, X, b, lambda) {
+  resids <- y - X %*% b 
+  s <- apply(X, 2, function(xj) crossprod(xj, resids)) / lambda / nrow(X)
+  (b == 0) & (abs(s) >= 1)
 }
-```
-According to the textbook, we can generate a random dataset
-```{r}
-set.seed(6909)
-n <- 1000L
-p <- 5000L
-X <- matrix(rnorm(n * p), ncol = p)
-beta <- c(seq(1, 0.1, length.out=(10L)), rep(0, p - 10L))
-y <- X %*% beta + rnorm(n = n, sd = 0.15)
-```
-Use glmnet to implement lasso regression
-```{r}
+
+##use iris as dataset
+
+x <- scale(model.matrix(Sepal.Length ~. -1, iris))
+y <- iris[,1]
+
+
+#implement lasso regression
 
 #Check which variables violate KKT condition
-#x:A numeric data matrix.
-#y: Response vector.
 #Return: logical vector indicating where the KKT conditions have been violated
 lasso_reg_with_screening <- function(x, y){
-  fit <- cv.glmnet(X,y,alpha=1)
-  lambda.1se <- fit$lambda.1se
-  b <- fit$glmnet.fit$beta[, which(fit$lambda == fit$lambda.1se)]
-  print(b)
-  check_kkt(X, y, b, lambda.1se)
+  m1 <- cv.glmnet(x,y,alpha=1)
+  #use 1se as the criteria to choose lambda
+  lambda <- m1$lambda.1se
+  b <- m1$glmnet.fit$beta[, m1$lambda == lambda]
+  check_kkt(y, x, b, lambda)
 }
-#We can observe that almost all coefficients get a false result for KKT violation. 
+lasso_reg_with_screening(x,y)
+
 ```
+We can observe thatall coefficients get a false result for KKT violation,which indicates that no KKT violation
