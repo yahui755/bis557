@@ -121,7 +121,7 @@ It's a sum of $l_2\ norm$ and $l_1\ norm$, from the previous two exercises,it's 
 ##5.
 According to textbook page 189:
 ```{r}
-#library(glmnet)
+library(glmnet)
 # KKT check function
 #Return: 
 #A logical vector indicating where the KKT conditions have been violated by the variables that are currently zero.
