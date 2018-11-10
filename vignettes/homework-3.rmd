@@ -151,5 +151,5 @@ lasso_reg_with_screening <- function(x, y){
 #lasso_reg_with_screening(x,y)
 
 ```
-We can observe that all coefficients get a false result for KKT violation,which indicates that no KKT violation
+We can observe that all coefficients get a false results for KKT violation,which indicates that no KKT violation
 (output can be seen in the homework-3.pdf file)
