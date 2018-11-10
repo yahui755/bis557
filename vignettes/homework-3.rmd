@@ -4,7 +4,7 @@ output:
   pdf_document: default
   html_document:
     df_print: paged
-’import : Matrix
+Imports : Matrix,glmnet
 ---
 
 This homework is due by the end of the day on November 5th 2018. Solutions should appear as a vignette in your package called "homework-3". If you do not want to write your solution for questions 2 - 4 in \LaTeX, you may provide a solution using paper and pencil and include an image in your write-up. 
@@ -118,7 +118,7 @@ It's a sum of $l_2\ norm$ and $l_1\ norm$, from the previous two exercises,it's 
 ##5.
 According to textbook page 189:
 ```{r}
-library(glmnet)
+#library(glmnet)
 # KKT check function
 #Return: 
 #A logical vector indicating where the KKT conditions have been violated by the variables that are currently zero.
@@ -145,7 +145,7 @@ lasso_reg_with_screening <- function(x, y){
   b <- m1$glmnet.fit$beta[, m1$lambda == lambda]
   check_kkt(y, x, b, lambda)
 }
-lasso_reg_with_screening(x,y)
+#lasso_reg_with_screening(x,y)
 
 ```
-We can observe thatall coefficients get a false result for KKT violation,which indicates that no KKT violation
+We can observe that all coefficients get a false result for KKT violation,which indicates that no KKT violation
