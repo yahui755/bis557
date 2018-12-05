@@ -1,0 +1,68 @@
+---
+title: "hw4"
+output: html_document
+author: "Yahui Zhao"
+date: "12/4/2018"
+---
+
+##1 (5.8.2)
+```{r}
+#create my matrix
+X <- matrix(c(1, 2, 3, 1), 2, 2)
+p <- c(0.4, 0.0000001)
+X
+p
+
+#calculate condition number for linear Hessian
+svals <- svd(t(X)%*%X)$d
+max(svals)/min(svals)
+```
+The logistic variation of Hessian matrix is 
+$$X'diag(p(1-p))X$$
+```{r}
+H = t(X)%*%diag(p*(1-p))%*%X
+#calculate condition number for logistic variation
+svals2 <- svd(H)$d
+max(svals2)/min(svals2)
+```
+
+Based on condition numbers we get, the one for linear Hessian is much smaller than that for logisitic variation. Which means the linear Hessian is well conditioned but the logistic variation is not.
+
+##2 (5.8.4)
+```{r}
+# Solve generalized linear models with Newton-Ralphson method.
+##
+#Args:
+# X: A numeric data matrix.
+# y: Response vector.
+# family: Instance of an R ‘family‘ object.
+# maxit: Integer maximum number of iterations.
+# tol: Numeric tolerance parameter.
+##
+#Returns:
+# Regression vector beta of length ncol(X).
+
+glm_irwls_ridge <-
+function(X, y, family, maxit=25, tol=1e-10)
+{
+beta <- rep(0,ncol(X))
+for(j in seq_len(maxit))
+{
+b_old <- beta
+eta <- X %*% beta
+mu <- family$linkinv(eta)
+mu_p <- family$mu.eta(eta)
+z <- eta + (y - mu) / mu_p
+W <- as.numeric(mu_p^2 / family$variance(mu))
+XtX <- crossprod(X, diag(W) %*% X)
+Xtz <- crossprod(X, W * z)
+beta <- solve(XtX, Xtz)
+# add l2-norm penalty
+    V <- XtX + diag(lambda, dim(XtX)[1])
+    beta  <- solve(V, Xtz)
+
+if(sqrt(crossprod(beta - b_old)) < tol) break
+}
+beta
+}
+```
